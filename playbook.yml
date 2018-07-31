@@ -61,6 +61,9 @@
       - AWSCLI
     become: true
 
+  - name: Update all libraries
+    yum: name=* state=latest      
+
   - name: Download cloudwatch logs agent
     get_url:
       url: https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
