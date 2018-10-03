@@ -62,4 +62,3 @@ pipeline:
       - NOTPROD_ACC_KEY
     when:
       event: push
-      branch: master

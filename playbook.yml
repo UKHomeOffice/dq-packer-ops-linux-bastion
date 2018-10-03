@@ -62,7 +62,7 @@
     become: true
 
   - name: Update all libraries
-    yum: name=* state=latest      
+    yum: name=* state=latest
 
   - name: Download cloudwatch logs agent
     get_url:
@@ -111,3 +111,17 @@
       name: Start awslogs
       special_time: reboot
       job: /usr/bin/startcloudwatchlogs.sh
+
+  - name: Secure sshd_config
+    lineinfile: dest=/etc/ssh/sshd_config
+                regexp="^PermitRootLogin"
+                line="PermitRootLogin no"
+                state=present
+  - lineinfile: dest=/etc/ssh/sshd_config
+                regexp="^PasswordAuthentication"
+                line="PasswordAuthentication no"
+                state=present
+  - lineinfile: dest=/etc/ssh/sshd_config
+                regexp="^X11Forwarding"
+                line="X11Forwarding no"
+                state=present      
