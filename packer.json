@@ -43,10 +43,6 @@
       "type": "ansible",
       "sftp_command": "/usr/libexec/openssh/sftp-server",
       "playbook_file": "./playbook.yml",
-      "extra_arguments": [
-        "--connection", "packer",
-        "--extra-vars", "ansible_shell_type=sh"
-      ]
     }
   ]
 }
