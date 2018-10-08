@@ -42,7 +42,7 @@
     {
       "type": "ansible",
       "sftp_command": "/usr/libexec/openssh/sftp-server",
-      "playbook_file": "./playbook.yml",
+      "playbook_file": "./playbook.yml"
     }
   ]
 }
