@@ -2,19 +2,19 @@
 pipeline:
 
   linux-packer-validate:
-    image: chrisns/packer-ansible
+    image: quay.io/ukhomeofficedigital/dq-packer-ansible
     commands:
       - export HOME=/home/packer
       - packer validate packer.json
 
   linux-packer-inspect:
-    image: chrisns/packer-ansible
+    image: quay.io/ukhomeofficedigital/dq-packer-ansible
     commands:
       - export HOME=/home/packer
       - packer inspect packer.json
 
   linux-packer-build:
-    image: chrisns/packer-ansible
+    image: quay.io/ukhomeofficedigital/dq-packer-ansible
     commands:
       - export HOME=/home/packer
       - export aws_access_key_id=$$AWS_ACCESS_KEY_ID
@@ -27,7 +27,7 @@ pipeline:
       event: push
 
   packer-copy-prod:
-    image: chrisns/packer-encrypt-copy
+    image: quay.io/ukhomeofficedigital/dq-packer-encrypt-copy
     pull: true
     commands:
       - export filters="--owner 093401982388 --filters "Name=name,Values=dq-linux-bastion*""
@@ -45,7 +45,7 @@ pipeline:
       branch: master
 
   packer-copy-notprod:
-    image: chrisns/packer-encrypt-copy
+    image: quay.io/ukhomeofficedigital/dq-packer-encrypt-copy
     pull: true
     commands:
       - export filters="--owner 093401982388 --filters "Name=name,Values=dq-linux-bastion*""
