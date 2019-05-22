@@ -14,6 +14,10 @@
     hostname:
       name: LINUX-BASTION1
 
+  - name: Set timezone to Europe/London
+    timezone:
+      name: Europe/London
+
   - name: Add hostname to /etc/hosts
     lineinfile:
       dest: /etc/hosts
@@ -124,4 +128,4 @@
   - lineinfile: dest=/etc/ssh/sshd_config
                 regexp="^X11Forwarding"
                 line="X11Forwarding no"
-                state=present      
+                state=present
