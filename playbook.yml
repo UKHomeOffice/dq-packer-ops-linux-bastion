@@ -65,8 +65,11 @@
       - AWSCLI
     become: true
 
-  - name: Update all libraries
-    yum: name=* state=latest
+  - name: update all libraries, excluding python-urllib
+    yum:
+      name: '*'
+      state: latest
+      exclude: python-urllib*
 
   - name: Download cloudwatch logs agent
     get_url:
