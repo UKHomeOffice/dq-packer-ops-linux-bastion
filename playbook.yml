@@ -59,17 +59,14 @@
     creates: /usr/src/Python-2.7.10/Modules
     become: true
 
+  - name: Update all libraries
+    yum: name=* state=latest
+
   - name: Pip Install AWSCLI
     pip: 'name={{ item }}'
     with_items:
       - AWSCLI
     become: true
-
-  - name: update all libraries, excluding python-urllib
-    yum:
-      name: '*'
-      state: latest
-      exclude: python-urllib*
 
   - name: Download cloudwatch logs agent
     get_url:
