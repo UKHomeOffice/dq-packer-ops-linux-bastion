@@ -2,6 +2,7 @@
 kind: pipeline
 name: default
 type: kubernetes
+
 platform:
   os: linux
   arch: amd64
@@ -42,7 +43,7 @@ steps:
   pull: always
   image: quay.io/ukhomeofficedigital/dq-packer-encrypt-copy
   commands:
-  - export filters="--owner 093401982388 --filters "Name=name,Values=dq-linux-bastion*""
+  - export filters="--owner 797728447925 --filters "Name=name,Values=dq-linux-bastion*""
   - export aws_id=$$PROD_ACC_ID
   - export aws_key=$$PROD_ACC_KEY
   - export region=eu-west-2
@@ -64,8 +65,7 @@ steps:
   pull: always
   image: quay.io/ukhomeofficedigital/dq-packer-encrypt-copy
   commands:
-  - export filters="--owner 093401982388 --filters "Name=name,Values=dq-linux-bastion*""
-  - export filters="--owner 093401982388 --filters "Name=name,Values=dq-linux-bastion*""
+  - export filters="--owner 797728447925 --filters "Name=name,Values=dq-linux-bastion*""
   - export aws_id=$$NOTPROD_ACC_ID
   - export aws_key=$$NOTPROD_ACC_KEY
   - export region=eu-west-2
