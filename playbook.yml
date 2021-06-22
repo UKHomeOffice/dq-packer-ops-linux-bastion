@@ -38,6 +38,10 @@
       path: /movedfiles
       state: directory
 
+  - name: Create files to be moved
+    file:
+      path: "/file1.txt"
+      state: touch
 
   - name: Insert app.conf file into direcoty
     template:
@@ -49,8 +53,10 @@
       name: nginx
       state: started
 
-  - name: Move files from current dir to movedfile dir
-    command: mv file1 file2 file3 /movedfiles
+  - name: Move file to movefiles dir
+    copy: src={{ item.src }} dest={{ item.dest }}
+    with_items:
+      - { src: 'file1.txt', dest: '/movedfiles' }
 
   # - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
   #             line="PasswordAuthentication no"
