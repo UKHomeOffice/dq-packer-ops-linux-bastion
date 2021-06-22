@@ -25,6 +25,6 @@
   #       name: nginx
   #       state: started
 
-  - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
-              line="PasswordAuthentication no"
-              state=present
+  # - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
+  #             line="PasswordAuthentication no"
+  #             state=present
