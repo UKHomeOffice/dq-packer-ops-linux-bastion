@@ -28,7 +28,12 @@
       name: nginx
       state: present
 
-  - name: Insert Index Page
+  - name: Create site-enabled directory
+    file:
+      path: /etc/nginx/html/site-enabled
+      state: directory
+
+  - name: Insert app.conf file into direcoty
     template:
       src: app.conf
       dest: /etc/nginx/html/site-enabled/app.conf
