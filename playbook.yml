@@ -18,12 +18,12 @@
     timezone:
       name: Europe/London
 
-  # - name: install nginx
-  #   apt: name=nginx state=latest
-  # - name: start nginx
-  #   service:
-  #       name: nginx
-  #       state: started
+  - name: install nginx
+    yum: name=nginx state=latest
+  - name: start nginx
+    service:
+        name: nginx
+        state: started
 
   # - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
   #             line="PasswordAuthentication no"
