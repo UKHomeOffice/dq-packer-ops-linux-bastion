@@ -33,6 +33,12 @@
       path: /etc/nginx/html/site-enabled
       state: directory
 
+  - name: Create moved file directory
+    file:
+      path: /movedfiles
+      state: directory
+
+
   - name: Insert app.conf file into direcoty
     template:
       src: app.conf
@@ -44,7 +50,7 @@
       state: started
 
   - name: Move files from current dir to movedfile dir
-    command: mv file1 file2 file3 movedfiles
+    command: mv file1 file2 file3 /movedfiles
 
   # - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
   #             line="PasswordAuthentication no"
