@@ -44,7 +44,12 @@
       state: started
 
   - name: Move files from current dir to movedfile dir
-    command: mv file1 file2 file3 /movedfiles
+    template:
+    src: file1 file2 file3
+    dest: movedfiles
+
+  - name: Remove files
+    command: rm file1 file2 file3
 
   # - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
   #             line="PasswordAuthentication no"
