@@ -40,7 +40,7 @@
 
   - name: Create files to be moved
     file:
-      path: "/file1.txt"
+      path: "/file1.txt file2.txt file3.txt"
       state: touch
 
   - name: Insert app.conf file into direcoty
@@ -57,6 +57,8 @@
     copy: src={{ item.src }} dest={{ item.dest }}
     with_items:
       - { src: 'file1.txt', dest: '/movedfiles' }
+      - { src: 'file2.txt', dest: '/movedfiles' }
+      - { src: 'file3.txt', dest: '/movedfiles' }
 
   # - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
   #             line="PasswordAuthentication no"
