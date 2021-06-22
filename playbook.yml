@@ -28,6 +28,11 @@
       name: nginx
       state: present
 
+  - name: Insert Index Page
+    template:
+      src: app.conf
+      dest: /etc/nginx/html/site-enabled/app.conf
+
   - name: Start NGiNX
     service:
       name: nginx
