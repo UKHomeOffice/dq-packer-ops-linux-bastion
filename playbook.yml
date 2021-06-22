@@ -28,10 +28,10 @@
       name: nginx
       state: present
 
-  # - name: Start NGiNX
-  #   service:
-  #     name: nginx
-  #     state: started
+  - name: Start NGiNX
+    service:
+      name: nginx
+      state: started
 
   # - debug: var=output.stdout_lines      regexp="^PasswordAuthentication"
   #             line="PasswordAuthentication no"
