@@ -25,6 +25,8 @@
       regexp: '^127\.0\.0\.1[ \t]+localhost'
       line: '127.0.0.1 localhost LINUX-BASTION1'
       state: present
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
 
   - name: DNF Update
     shell: |
@@ -33,12 +35,16 @@
        dnf install -y libselinux-python3
        dnf install -y postgresql
     become: true
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
 
   - name: Download cloudwatch logs agent
     get_url:
       url: https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
       dest: /tmp/awslogs-agent-setup.py
       mode: "+x"
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
 
   - name: Cloudwatch logs config
     copy:
@@ -61,12 +67,17 @@
         log_group_name = /Centos_Server/cloud-init/output
         log_stream_name = {instance_id}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
+
   - name: Install cloudwatch log agent
     environment:
       LC_ALL: C
     shell: /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
     args:
       creates: /var/awslogs/etc/aws.conf
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
 
   - name: Copy cloudwatch logs starter
     copy:
@@ -75,12 +86,16 @@
       owner: root
       group: root
       mode: 0755
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
 
   - name: Make Cron Job to start awslogs with right region
     cron:
       name: Start awslogs
       special_time: reboot
       job: /usr/bin/startcloudwatchlogs.sh
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
 
   - name: Secure sshd_config
     lineinfile: dest=/etc/ssh/sshd_config
@@ -95,3 +110,5 @@
                 regexp="^X11Forwarding"
                 line="X11Forwarding no"
                 state=present
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
