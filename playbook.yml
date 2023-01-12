@@ -38,11 +38,10 @@
     vars:
       ansible_python_interpreter: "/usr/libexec/platform-python" 
 
-  - name: Download cloudwatch logs agent
-    get_url:
-      url: https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
-      dest: /tmp/awslogs-agent-setup.py
-      mode: "+x"
+  - name: GET Cloudwatch logs config from DQ-config-bucket
+    shell: |
+       /usr/local/bin/aws s3 cp s3://dq-config-bucket/dq-tableau-linux/awslogs-agent-setup.py /tmp
+       chmod u+x /tmp/awslogs-agent-setup.py
     vars:
       ansible_python_interpreter: "/usr/libexec/platform-python" 
 
@@ -73,11 +72,11 @@
   - name: Install cloudwatch log agent
     environment:
       LC_ALL: C
-    shell: python3 /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
+    shell: ln -s -f /usr/bin/python3.9 /usr/bin/python && /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
     args:
       creates: /var/awslogs/etc/aws.conf
     vars:
-      ansible_python_interpreter: /usr/bin/python3
+      ansible_python_interpreter: /usr/libexec/platform-python
 
   - name: Copy cloudwatch logs starter
     copy:
