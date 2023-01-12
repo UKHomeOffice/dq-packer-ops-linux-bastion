@@ -76,6 +76,8 @@
     shell: /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
     args:
       creates: /var/awslogs/etc/aws.conf
+    vars:
+      ansible_python_interpreter: /usr/bin/python3
 
   - name: Copy cloudwatch logs starter
     copy:
@@ -84,6 +86,8 @@
       owner: root
       group: root
       mode: 0755
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
 
   - name: Make Cron Job to start awslogs with right region
     cron:
