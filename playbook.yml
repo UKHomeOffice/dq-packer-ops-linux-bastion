@@ -30,6 +30,7 @@
     shell: |
        sed -i 's/REGION/eu-west-2/' /etc/yum.repos.d/redhat-rhui*.repo
        dnf update -y
+       dnf install -y libselinux-python3
        dnf install -y postgresql
     become: true
 
