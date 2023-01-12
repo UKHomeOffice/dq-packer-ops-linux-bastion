@@ -96,6 +96,12 @@
     vars:
       ansible_python_interpreter: "/usr/libexec/platform-python" 
 
+  - name: install selinux bindings
+    shell: |
+      ln -s -f /usr/bin/python3.9 /usr/bin/python && pip3 install selinux 
+    vars:
+      ansible_python_interpreter: "/usr/libexec/platform-python" 
+
   - name: Secure sshd_config
     lineinfile: dest=/etc/ssh/sshd_config
                 regexp="^PermitRootLogin"
