@@ -1,119 +1,200 @@
 ---
-- name: Pre-reqs for ansible to run
-  hosts: all
-  gather_facts: false
-  become: yes
-  pre_tasks:
-    - raw: test -e /usr/bin/python || ( dnf clean packages && dnf install -y python39 && ln -s -f /usr/bin/python3.9 /usr/bin/python)
-
 - name: Build Data Ingest Linux Server.
   hosts: all
   become: true
   tasks:
-  - name: Set machine hostname
-    shell: |
-      hostname LINUX-BASTION1
-      echo "LINUX-BASTION1" > /etc/hostname
+    - name: Set machine hostname
+      shell: |
+        hostname LINUX-BASTION1
+        echo "LINUX-BASTION1" > /etc/hostname
 
-  - name: Set timezone to Europe/London
-    timezone:
-      name: Europe/London
+    - name: Set timezone to Europe/London
+      timezone:
+        name: Europe/London
 
-  - name: Add hostname to /etc/hosts
-    lineinfile:
-      dest: /etc/hosts
-      regexp: '^127\.0\.0\.1[ \t]+localhost'
-      line: '127.0.0.1 localhost LINUX-BASTION1'
-      state: present
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: sed DNF Update
+      shell: |
+         sed -i 's/REGION/eu-west-2/' /etc/yum.repos.d/redhat-rhui*.repo
+      become: true
 
-  - name: DNF Update
-    shell: |
-       sed -i 's/REGION/eu-west-2/' /etc/yum.repos.d/redhat-rhui*.repo
-       dnf update -y
-       dnf install -y libselinux-python3
-       dnf install -y postgresql
-    become: true
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: Add hostname to /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^127\.0\.0\.1[ \t]+localhost'
+        line: '127.0.0.1 localhost LINUX-BASTION1'
+        state: present
 
-  - name: GET Cloudwatch logs config from DQ-config-bucket
-    shell: |
-       /usr/local/bin/aws s3 cp s3://dq-config-bucket/dq-tableau-linux/awslogs-agent-setup.py /tmp
-       chmod u+x /tmp/awslogs-agent-setup.py
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: DNF Install Dependencies
+      dnf: name={{ item }}
+      with_items:
+        - python39
+#        - libselinux-python3
+        - postgresql
+        - zip
+        - unzip
+      become: true
 
-  - name: Cloudwatch logs config
-    copy:
-      dest: /tmp/cwlogs.conf
-      content: |
-        [general]
-        state_file = /var/awslogs/state/agent-state
-        [/var/log/syslog]
-        file = /var/log/syslog
-        log_group_name = /Centos_Server/system
-        log_stream_name = {instance_id}
-        datetime_format = %b %d %H:%M:%S
-        [/Centos_Server/cloud-init]
-        file = /var/log/cloud-init.log
-        log_group_name = /Centos_Server/cloud-init
-        log_stream_name = {instance_id}
-        datetime_format = %Y-%m-%d %H:%M:%S,%f
-        [/Centos_Server/cloud-init/output]
-        file = /var/log/cloud-init-output.log
-        log_group_name = /Centos_Server/cloud-init/output
-        log_stream_name = {instance_id}
-        datetime_format = %Y-%m-%d %H:%M:%S,%f
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: Create python link
+      file:
+        src: /usr/bin/python3.9
+        dest: /usr/bin/python
+        state: link
+        force: true
 
-  - name: Install cloudwatch log agent
-    environment:
-      LC_ALL: C
-    shell: ln -s -f /usr/bin/python3.9 /usr/bin/python && /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
-    args:
-      creates: /var/awslogs/etc/aws.conf
-    vars:
-      ansible_python_interpreter: /usr/libexec/platform-python
 
-  - name: Copy cloudwatch logs starter
-    copy:
-      src: startcloudwatchlogs.sh
-      dest: /usr/bin/startcloudwatchlogs.sh
-      owner: root
-      group: root
-      mode: 0755
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: Get AWS-CLI
+      shell: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
 
-  - name: Make Cron Job to start awslogs with right region
-    cron:
-      name: Start awslogs
-      special_time: reboot
-      job: /usr/bin/startcloudwatchlogs.sh
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: GET CloudWatch logs config from DQ-config-bucket - cp
+      command: /usr/local/bin/aws s3 cp s3://dq-config-bucket/dq-tableau-linux/awslogs-agent-setup.py /tmp
 
-  - name: install selinux bindings
-    shell: |
-      ln -s -f /usr/bin/python3.9 /usr/bin/python && pip3 install selinux 
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: Set CloudWatch logs config executable
+      command: chmod u+x /tmp/awslogs-agent-setup.py
 
-  - name: Secure sshd_config
-    lineinfile: dest=/etc/ssh/sshd_config
-                regexp="^PermitRootLogin"
-                line="PermitRootLogin no"
-                state=present
-  - lineinfile: dest=/etc/ssh/sshd_config
-                regexp="^PasswordAuthentication"
-                line="PasswordAuthentication no"
-                state=present
-  - lineinfile: dest=/etc/ssh/sshd_config
-                regexp="^X11Forwarding"
-                line="X11Forwarding no"
-                state=present
-    vars:
-      ansible_python_interpreter: "/usr/libexec/platform-python" 
+    - name: Cloudwatch logs config
+      copy:
+        dest: /tmp/cwlogs.conf
+        content: |
+          [general]
+          state_file = /var/awslogs/state/agent-state
+          [/var/log/syslog]
+          file = /var/log/syslog
+          log_group_name = /Linux_Bastion/system
+          log_stream_name = {instance_id}
+          datetime_format = %b %d %H:%M:%S
+          [/Linux_Bastion/cloud-init]
+          file = /var/log/cloud-init.log
+          log_group_name = /Linux_Bastion/cloud-init
+          log_stream_name = {instance_id}
+          datetime_format = %Y-%m-%d %H:%M:%S,%f
+          [/Linux_Bastion/cloud-init/output]
+          file = /var/log/cloud-init-output.log
+          log_group_name = /Linux_Bastion/cloud-init/output
+          log_stream_name = {instance_id}
+          datetime_format = %Y-%m-%d %H:%M:%S,%f
+
+    - name: Install cloudwatch log agent
+      environment:
+        LC_ALL: C
+      shell: /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
+      args:
+        creates: /var/awslogs/etc/aws.conf
+
+    - name: Copy cloudwatch logs starter
+      copy:
+        src: startcloudwatchlogs.sh
+        dest: /usr/bin/startcloudwatchlogs.sh
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Make Cron Job to start awslogs with right region
+      cron:
+        name: Start awslogs
+        special_time: reboot
+        job: /usr/bin/startcloudwatchlogs.sh
+
+    - name: Download cloudwatch agent (for ec2 alarms)
+      get_url:
+        url: https://s3.amazonaws.com/amazoncloudwatch-agent/redhat/amd64/latest/amazon-cloudwatch-agent.rpm
+        dest: /tmp/amazon-cloudwatch-agent.rpm
+        mode: "+x"
+
+    - name: Install cloudwatch agent (for ec2 alarms)
+      dnf:
+        name: /tmp/amazon-cloudwatch-agent.rpm
+        state: present
+        disable_gpg_check: true
+
+    - name: Cloudwatch Agent config
+      copy:
+        dest: /opt/aws/amazon-cloudwatch-agent/bin/config.json
+        content: |
+                  {
+                  "agent": {
+                          "metrics_collection_interval": 60,
+                          "run_as_user": "ec2-user"
+                  },
+                  "metrics": {
+                          "namespace": "CWAgent",
+                          "append_dimensions": {
+                                  "InstanceId": "${aws:InstanceId}"
+                          },
+                          "metrics_collected": {
+                                  "disk": {
+                                          "measurement": [
+                                                  "used_percent"
+                                          ],
+                                          "metrics_collection_interval": 60,
+                                          "resources": [
+                                                  "*"
+                                          ],
+                                          "ignore_file_system_types": [
+                                                  "devtmpfs",
+                                                  "tmpfs"
+                                          ],
+                                          "drop_device": true
+                                  },
+                                  "diskio": {
+                                          "measurement": [
+                                                  "io_time"
+                                          ],
+                                          "metrics_collection_interval": 60,
+                                          "resources": [
+                                                  "*"
+                                          ]
+                                  },
+                                  "mem": {
+                                          "measurement": [
+                                                  "mem_used_percent",
+                                                  "mem_available_percent",
+                                                  "mem_used",
+                                                  "mem_cached",
+                                                  "mem_total"
+                                          ],
+                                          "metrics_collection_interval": 60
+                                  },
+                                  "swap": {
+                                    "measurement": [
+                                            "swap_used_percent"
+                                    ],
+                                    "metrics_collection_interval": 60
+                                          }
+                                  }
+                          }
+                  }
+
+    - name: Set DNS Resolver Options
+      blockinfile:
+        path: /etc/sysconfig/network
+        block: |
+          RES_OPTIONS="rotate timeout:1 attempts:1"
+
+    - name: PIP install selinux bindings and boto3
+      pip:
+         name:
+           - selinux
+
+    - name: Secure sshd_config
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+        state: present
+
+    - name: sshd_config - PasswordAuthentication no
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^PasswordAuthentication"
+        line: "PasswordAuthentication no"
+        state: present
+
+    - name: sshd_config - X11Forwarding no
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^X11Forwarding"
+        line: "X11Forwarding no"
+        state: present
