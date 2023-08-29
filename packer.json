@@ -39,6 +39,12 @@
       "ssh_username": "ec2-user",
       "instance_type": "t3.medium",
       "ami_name": "dq-linux-bastion {{user `drone_build_number`}}",
+      "imds_support":"v2.0", 
+      "metadata_options": {
+        "http_endpoint": "enabled",
+        "http_tokens": "required",
+        "http_put_response_hop_limit": 1
+      },
       "ami_users": [
         "483846886818",
         "337779336338"
