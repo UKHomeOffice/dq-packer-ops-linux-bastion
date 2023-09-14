@@ -205,26 +205,6 @@
         line: 'X11Forwarding no'
         state: present
 
-    - name: Copy sudoers files
-      copy:
-        src: '{{item}}'
-        dest: /etc/sudoers.d/
-        owner: root
-        group: root
-        mode: 0755
-      loop:
-        - 91-dqsupport-user
-
-    - name: Copy sudoers temp folder
-      copy:
-        src: '{{item}}'
-        dest: /tmp/
-        owner: root
-        group: root
-        mode: 0755
-      loop:
-        - 90-cloud-init-users
-
     - name: Create user with locked password
       user:
         name: dqsupport
@@ -234,3 +214,15 @@
 
     - name: Expire password
       command: chage -d 0 dqsupport
+
+    - name: Copy sudoers files
+      copy:
+        src: '{{item}}'
+        dest: /etc/sudoers.d/
+        owner: root
+        group: root
+        mode: 0755
+      loop:
+        - 90-cloud-init-users
+        - 91-dqsupport-user
+      become: true
