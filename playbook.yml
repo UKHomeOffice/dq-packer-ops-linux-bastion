@@ -54,7 +54,8 @@
       loop:
         - 90-cloud-init-users
         - 91-dqsupport-user
-      become: true
+      become: yes
+      become_user: root
       
     - name: Create python link
       file:
