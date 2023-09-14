@@ -1,4 +1,4 @@
 # Created by cloud-init v. 22.1-8.el8 on Tue, 11 Jul 2023 15:07:00 +0000
 # User rules for ec2-user
 #ec2-user ALL=(ALL) NOPASSWD:ALL
-ec2-user ALL = /opt/aws/amazon-cloudwatch-agent/bin/, /usr/local/op_commands/, /usr/bin/su [!-]*, !/usr/bin/su *root*
+ec2-user ALL = /opt/aws/amazon-cloudwatch-agent/bin/, /usr/local/op_commands/, /usr/bin/su [!-]*, !/usr/bin/su *root* NOPASSWD:ALL
