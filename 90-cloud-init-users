@@ -2,7 +2,7 @@
 # User rules for ec2-user
 #ec2-user ALL=(ALL) NOPASSWD:ALL
 ## Group Administration
-Cmnd_Alias NOTROOT = /opt/aws/amazon-cloudwatch-agent/bin/, /usr/bin/su - ec2-user, !/usr/bin/su root
+Cmnd_Alias NOTROOT = /opt/aws/amazon-cloudwatch-agent/bin/, /usr/bin/su - dqsupport, !/usr/bin/su root
 
 # User rules for ec2-user
 dqsupport ALL = NOPASSWD: NOTROOT
