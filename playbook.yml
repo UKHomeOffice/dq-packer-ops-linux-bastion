@@ -52,7 +52,6 @@
         group: root
         mode: 0755
       loop:
-        - 90-cloud-init-users
         - 91-dqsupport-user
       become: yes
       become_user: root
