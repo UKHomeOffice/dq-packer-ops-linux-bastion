@@ -33,7 +33,29 @@
         - zip
         - unzip
       become: true
+      
+    - name: Create user with locked password
+      user:
+        name: dqsupport
 
+    - name: Unlock password and set it to empty
+      command: passwd -d dqsupport
+
+    - name: Expire password
+      command: chage -d 0 dqsupport
+
+    - name: Copy sudoers files
+      copy:
+        src: '{{item}}'
+        dest: /etc/sudoers.d/
+        owner: root
+        group: root
+        mode: 0755
+      loop:
+        - 90-cloud-init-users
+        - 91-dqsupport-user
+      become: true
+      
     - name: Create python link
       file:
         src: /usr/bin/python3.9
@@ -204,25 +226,3 @@
         regexp: '^X11Forwarding'
         line: 'X11Forwarding no'
         state: present
-
-    - name: Create user with locked password
-      user:
-        name: dqsupport
-
-    - name: Unlock password and set it to empty
-      command: passwd -d dqsupport
-
-    - name: Expire password
-      command: chage -d 0 dqsupport
-
-    - name: Copy sudoers files
-      copy:
-        src: '{{item}}'
-        dest: /etc/sudoers.d/
-        owner: root
-        group: root
-        mode: 0755
-      loop:
-        - 90-cloud-init-users
-        - 91-dqsupport-user
-      become: true
