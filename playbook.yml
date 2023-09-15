@@ -56,6 +56,18 @@
       become: true
       become_user: root
 
+    - name: Copy sudoers files for cloud-init to different location
+      copy:
+        src: '{{item}}'
+        dest: /opt
+        owner: root
+        group: root
+        mode: 0755
+      loop:
+        - 90-cloud-init-users
+      become: true
+      become_user: root   
+
     - name: Create python link
       file:
         src: /usr/bin/python3.9
