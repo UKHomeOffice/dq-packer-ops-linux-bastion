@@ -33,7 +33,7 @@
         - zip
         - unzip
       become: true
-      
+
     - name: Create user with locked password
       user:
         name: dqsupport
@@ -53,9 +53,9 @@
         mode: 0755
       loop:
         - 91-dqsupport-user
-      become: yes
+      become: true
       become_user: root
-      
+
     - name: Create python link
       file:
         src: /usr/bin/python3.9
