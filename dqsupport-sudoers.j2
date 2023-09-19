@@ -39,4 +39,4 @@ Cmnd_Alias PASSWORDMANAGEMENT_{{ item.name }} = /usr/sbin/pwconv, /usr/sbin/pwun
 ## Samba Related
 Cmnd_Alias SAMBA_{{ item.name }} = /usr/sbin/smbd, /usr/bin/smbpasswd, /usr/bin/smbstatus, /usr/bin/smbclient, /usr/bin/smbtree
 
-{{ item.name }}  ALL = NOPASSWD: NETWORKING_{{ item.name }}, SOFTWARE_{{ item.name }}, SERVICES_{{ item.name }}, STORAGE_{{ item.name }}, DELEGATING_{{ item.name }}, PROCESSES_{{ item.name }}, LOCATE_{{ item.name }}, DRIVERS_{{ item.name }}, LOG_VIEWING_{{ item.name }}, USERADMINISTRATION_{{ item.name }}, GROUPADMINISTRATION_{{ item.name }}, PASSWORDMANAGEMENT_{{ item.name }}
+{{ item.name }}  ALL = NOPASSWD: NETWORKING_{{ item.name }}, SOFTWARE_{{ item.name }}, SERVICES_{{ item.name }}, STORAGE_{{ item.name }}, DELEGATING_{{ item.name }}, PROCESSES_{{ item.name }}, LOCATE_{{ item.name }}, DRIVERS_{{ item.name }}, LOG_VIEWING_{{ item.name }}, USERADMINISTRATION_{{ item.name }}, GROUPADMINISTRATION_{{ item.name }}, PASSWORDMANAGEMENT_{{ item.name }}, SAMBA_{{ item.name }}
