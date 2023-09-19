@@ -1,42 +1,42 @@
 #Aliases:
 
 ## Networking
-Cmnd_Alias NETWORKING = /sbin/route, /sbin/ifconfig, /bin/ping, /sbin/dhclient, /usr/bin/net, /sbin/iptables, /sbin/ethtool, /sbin/ifconfig, /sbin/ifenslave, /sbin/ifown, /sbin/ifup
+Cmnd_Alias NETWORKING_{{ item.name }} = /sbin/route, /sbin/ifconfig, /bin/ping, /sbin/dhclient, /usr/bin/net, /sbin/iptables, /sbin/ethtool, /sbin/ifconfig, /sbin/ifenslave, /sbin/ifown, /sbin/ifup
 
 ## Installation and management of software
-Cmnd_Alias SOFTWARE = /bin/bin/dnf
+Cmnd_Alias SOFTWARE_{{ item.name }} = /bin/bin/dnf
 
 ## Services
-Cmnd_Alias SERVICES = /sbin/service, /sbin/chkconfig
+Cmnd_Alias SERVICES_{{ item.name }} = /sbin/service, /sbin/chkconfig
 
 ## Updating the locate database
-Cmnd_Alias LOCATE = /usr/bin/updatedb, /bin/sh, /bin/bash
+Cmnd_Alias LOCATE_{{ item.name }} = /usr/bin/updatedb, /bin/sh, /bin/bash
 
 ## Storage
-Cmnd_Alias STORAGE = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount, /sbin/powermt
+Cmnd_Alias STORAGE_{{ item.name }} = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount, /sbin/powermt
 
 ## Delegating permissions
-Cmnd_Alias DELEGATING = /usr/sbin/visudo, /bin/chown, /bin/chmod, /bin/chgrp, /usr/sbin/chroot, /usr/bin/su - root
+Cmnd_Alias DELEGATING_{{ item.name }} = /usr/sbin/visudo, /bin/chown, /bin/chmod, /bin/chgrp, /usr/sbin/chroot, /usr/bin/su - root
 
 ## Processes
-Cmnd_Alias PROCESSES = /bin/nice, /bin/kill, /usr/bin/kill, /usr/bin/killall
+Cmnd_Alias PROCESSES_{{ item.name }} = /bin/nice, /bin/kill, /usr/bin/kill, /usr/bin/killall
 
 ## Drivers
-Cmnd_Alias DRIVERS = /sbin/modprobe, /sbin/modinfo
+Cmnd_Alias DRIVERS_{{ item.name }} = /sbin/modprobe, /sbin/modinfo
 
 #the below line added by Tanveer on 5th March 2013 for testing sudo same as Exadata Test node#
-Cmnd_Alias LOG_VIEWING = /bin/cat, /bin/more, /bin/grep, /usr/bin/less, /usr/bin/head, /usr/bin/tail
+Cmnd_Alias LOG_VIEWING_{{ item.name }} = /bin/cat, /bin/more, /bin/grep, /usr/bin/less, /usr/bin/head, /usr/bin/tail
 
 ## User Administration
-Cmnd_Alias USERADMINISTRATION = /usr/sbin/useradd, /usr/sbin/userdel, /usr/sbin/passwd, /usr/sbin/usermod
+Cmnd_Alias USERADMINISTRATION_{{ item.name }} = /usr/sbin/useradd, /usr/sbin/userdel, /usr/sbin/passwd, /usr/sbin/usermod
 
 ## Group Administration
-Cmnd_Alias GROUPADMINISTRATION = /usr/sbin/groupadd, /usr/sbin/groupdel, /usr/sbin/groupmod
+Cmnd_Alias GROUPADMINISTRATION_{{ item.name }} = /usr/sbin/groupadd, /usr/sbin/groupdel, /usr/sbin/groupmod
 
 ## Password Management
-Cmnd_Alias PASSWORDMANAGEMENT = /usr/sbin/pwconv, /usr/sbin/pwunconv, /usr/sbin/grpconv, /usr/sbin/grpunconv, /usr/bin/chage, /usr/sbin/chpasswd
+Cmnd_Alias PASSWORDMANAGEMENT_{{ item.name }} = /usr/sbin/pwconv, /usr/sbin/pwunconv, /usr/sbin/grpconv, /usr/sbin/grpunconv, /usr/bin/chage, /usr/sbin/chpasswd
 
 ## Samba Related
-Cmnd_Alias SAMBA = /usr/sbin/smbd, /usr/bin/smbpasswd, /usr/bin/smbstatus, /usr/bin/smbclient, /usr/bin/smbtree
+Cmnd_Alias SAMBA_{{ item.name }} = /usr/sbin/smbd, /usr/bin/smbpasswd, /usr/bin/smbstatus, /usr/bin/smbclient, /usr/bin/smbtree
 
-{{ item.name }}  ALL = NOPASSWD: NETWORKING, SOFTWARE, SERVICES, STORAGE, DELEGATING, PROCESSES, LOCATE, DRIVERS, LOG_VIEWING, USERADMINISTRATION, GROUPADMINISTRATION, PASSWORDMANAGEMENT
+{{ item.name }}  ALL = NOPASSWD: NETWORKING_{{ item.name }}, SOFTWARE_{{ item.name }}, SERVICES_{{ item.name }}, STORAGE_{{ item.name }}, DELEGATING_{{ item.name }}, PROCESSES_{{ item.name }}, LOCATE_{{ item.name }}, DRIVERS_{{ item.name }}, LOG_VIEWING_{{ item.name }}, USERADMINISTRATION_{{ item.name }}, GROUPADMINISTRATION_{{ item.name }}, PASSWORDMANAGEMENT_{{ item.name }}
