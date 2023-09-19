@@ -59,18 +59,6 @@
         - unzip
       become: true
 
-    - name: Copy sudoers files
-      copy:
-        src: '{{item}}'
-        dest: /etc/sudoers.d/
-        owner: root
-        group: root
-        mode: 0755
-      loop:
-        - 91-dqsupport-user
-      become: true
-      become_user: root
-
     - name: Copy sudoers files for cloud-init to different location
       copy:
         src: '{{item}}'
