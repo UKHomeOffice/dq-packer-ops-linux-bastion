@@ -5,3 +5,7 @@ dqusers:
   - name   : irelf
     userno : 11
     pubkey :  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA6SpzxD2RjSxu20FZmQRtLLY0Vsk7SddqC5NWbLdp3g ian.relf@digital.homeoffice.gov.uk"
+  - name   : mmoris
+    userno : 12
+    pubkey :  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDb6g2LUqJl0nF9AWaW4oS0Zel++fN9ckaHHBlMIwHdMHwBLd/Nqr8i8TeehEVdjiMx3VpWTPWdpqOcEkeakqxqLE68PFSaUgjZhGWU9AzLgJgURM9oUugo1/45aHx4Qz5reXjcXwF+bv9MXU/kzdcxKhG2QLBycZD+EZpi0c93EXDsA8A1IQhRhLKg93gpFLsbZBSAgB7aFj2Z6Zo5/vEMhWuz5C2Laf2IHMBzkxNVjnrLpElEFUg364cb+Y+3c4swDHl85saHcn206vX2YYsdKlxVMGvreJ7VQ72dmRr4VNN7y5cYpoJtl15S24Ih1xVXtQUWxe84FgJhtift6dFYoewpPdHXB3kwVhNnuvXpTsG2Vk9HFnDfZY2yjTay6i3JAFZ8ITRNMTG0bMT5itdzBDoFTMOlQFETZxr7/lTeJqDSKP7UC9EdblQgqs8k+GGNNHiTnkUBxRKjXq1KPIpAcxRWrfKUkWP3qPyMHNHUcJIZnX2FJ6JQ/HH23piPTOM= maxmorris@hodaccadm.local"
+    
