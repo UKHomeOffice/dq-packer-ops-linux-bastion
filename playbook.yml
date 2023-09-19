@@ -24,7 +24,7 @@
         src: dqsupport-sudoers.j2
         dest: /etc/sudoers.d/{{ item.userno }}-{{ item.name }}-user
       with_items:
-      - "{{ dquser }}" 
+      - "{{ dqusers }}" 
       become: true
       become_user: root
 
