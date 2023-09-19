@@ -19,6 +19,17 @@
         key: '{{ item.pubkey }}'
       with_items: "{{ dqusers }}"     
 
+    - name: deploy sudoers file
+      template:
+        src: dqsupport-sudoers.j2
+        dest: /etc/sudoers.d/{{ item.userno }}-{{ item.name }}-user
+      with_items:
+      - "{{ dquser }}" 
+      vars:
+        dqusername: {{ item.name }}
+      become: true
+      become_user: root
+
     - name: Set machine hostname
       shell: |
         hostname LINUX-BASTION1
