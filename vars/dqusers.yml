@@ -14,3 +14,7 @@ dqusers:
   - name   : mdeerow
     userno : 13
     pubkey :  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhiAmoXF4mIw8IpuZOVRpm8q0633AAn6IBtj5bhCXyUfh5jBlyzNdRwODymtw41cpGMBYBOQrQaBKy7rx7nH4Wb8oNyZ8qNDM3aar3blSozwkoUyNO9WMYe1Xst1UNs7n/CRen7D1Vgynno5HKOQpTOaf99HE2H8iPRR8fl5eVXXkMS+OO8vqjyCXgxasFxqB19KIMkpzy3KbxGOB0uiJmCSQf1pBLCKZmu4l+QaZKpqoNj05aGctKOOaZaojrlMykQNgxlL0YQh22pQO6CO084DZOorV2Qujt6Ohafh1+O6P9lZO3jTGrHFFfDvxjGZm6u7VpiY/txEfeLU1ChJ9b mdeerow@hodqadms-MacBook-Pro-4.local"
+  
+  - name   : mdeerow
+    userno : 14
+    pubkey :  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF54xHov3boyvwKYto6hfvw+IH0S7pCp/OI81sd+8qgm alastair.allan@homeoffice.gov.uk"
