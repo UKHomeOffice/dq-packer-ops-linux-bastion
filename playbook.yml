@@ -2,32 +2,7 @@
 - name: Build Data Ingest Linux Server.
   hosts: all
   become: true
-  vars_files:
-    - ./vars/dqusers.yml
   tasks:
-    - name: Create users for dqsupport members
-      user:
-          name: "{{ item.name }}"
-          shell: /bin/bash
-          createhome: yes                    
-      with_items: "{{ dqusers }}"      
-        
-    - name: setup ssh pub key for abv defined users  
-      authorized_key:
-        user: '{{ item.name }}'
-        key: '{{ item.pubkey | join("\n")  }}'
-        state: "present" 
-      with_items: "{{ dqusers }}"    
-
-    - name: deploy sudoers file
-      template:
-        src: dqsupport-sudoers.j2
-        dest: /etc/sudoers.d/{{ item.userno }}-{{ item.name }}-user
-      with_items:
-      - "{{ dqusers }}" 
-      become: true
-      become_user: root
-
     - name: Set machine hostname
       shell: |
         hostname LINUX-BASTION1
@@ -36,19 +11,6 @@
     - name: Set timezone to Europe/London
       timezone:
         name: Europe/London
-
-    - name: sed DNF Update
-      shell: |
-        sed -i 's/REGION/eu-west-2/' /etc/yum.repos.d/redhat-rhui*.repo
-      become: true
-
-    - name: Add hostname to /etc/hosts
-      lineinfile:
-        dest: /etc/hosts
-        regexp: '^127\.0\.0\.1[ \t]+localhost'
-        line: '127.0.0.1 localhost LINUX-BASTION1'
-        state: present
-
     - name: DNF Install Dependencies
       dnf: name={{ item }}
       with_items:
@@ -58,6 +20,69 @@
         - zip
         - unzip
       become: true
+    - name: Get AWS-CLI
+      shell: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        ./aws/install
+      become: true
+      become_user: root
+
+    - name: sed DNF Update
+      shell: |
+        sed -i 's/REGION/eu-west-2/' /etc/yum.repos.d/redhat-rhui*.repo
+      become: true
+    - name: PIP install botocore and boto3
+      pip:
+        name:
+           - botocore
+           - boto3
+        executable: pip3.9
+      become: true
+      become_user: root  
+
+    - name: Pull variable file from S3
+      shell: |
+        /usr/local/bin/aws s3 cp s3://dq-config-bucket/dqusers.yml /tmp/dqusers.yml
+      become: true
+      become_user: root 
+    - name: Use fetch module for this task  
+      fetch:
+            src: "/tmp/dqusers.yml"
+            dest: ./var/dqusers.yml
+            flat: yes      
+
+    - name: Read dqusers yaml
+      include_vars:
+        file: ./var/dqusers.yml
+
+    - name: Create users for dqsupport members
+      user:
+          name: "{{ item.name }}"
+          shell: /bin/bash
+          createhome: yes                    
+      with_items: "{{ dqusers }}"      
+
+    - name: setup ssh pub key for abv defined users  
+      authorized_key:
+          user: '{{ item.name }}'
+          key: '{{ item.pubkey | join("\n")  }}'
+          state: "present" 
+      with_items: "{{ dqusers }}"
+
+    - name: deploy sudoers file
+      template:
+         src: dqsupport-sudoers.j2
+         dest: /etc/sudoers.d/{{ item.userno }}-{{ item.name }}-user
+      with_items: "{{ dqusers }}" 
+      become: true
+      become_user: root
+    - name: Add hostname to /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^127\.0\.0\.1[ \t]+localhost'
+        line: '127.0.0.1 localhost LINUX-BASTION1'
+        state: present
 
     - name: Copy sudoers files for cloud-init to different location
       copy:
@@ -77,12 +102,6 @@
         dest: /usr/bin/python
         state: link
         force: true
-
-    - name: Get AWS-CLI
-      shell: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
 
     - name: GET CloudWatch logs config from DQ-config-bucket - cp
       command: /usr/local/bin/aws s3 cp s3://dq-config-bucket/dq-tableau-linux/awslogs-agent-setup.py /tmp
