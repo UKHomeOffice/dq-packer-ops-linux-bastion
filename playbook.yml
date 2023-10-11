@@ -11,6 +11,15 @@
     - name: Set timezone to Europe/London
       timezone:
         name: Europe/London
+    - name: DNF Install Dependencies
+      dnf: name={{ item }}
+      with_items:
+        - zip
+        - unzip
+        - git
+        - postgresql
+        - python39
+      become: true
     - name: Get AWS-CLI
       shell: |
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
