@@ -2,6 +2,7 @@
 - name: Build Data Ingest Linux Server.
   hosts: all
   become: true
+  tasks:
     - name: Set machine hostname
       shell: |
         hostname LINUX-BASTION1
