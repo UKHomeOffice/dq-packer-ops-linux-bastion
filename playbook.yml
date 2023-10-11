@@ -14,11 +14,11 @@
     - name: DNF Install Dependencies
       dnf: name={{ item }}
       with_items:
+        - python39
+        #        - libselinux-python3
+        - postgresql
         - zip
         - unzip
-        - git
-        - postgresql
-        - python39
       become: true
     - name: Get AWS-CLI
       shell: |
@@ -84,16 +84,6 @@
         line: '127.0.0.1 localhost LINUX-BASTION1'
         state: present
 
-    - name: DNF Install Dependencies
-      dnf: name={{ item }}
-      with_items:
-        - python39
-        #        - libselinux-python3
-        - postgresql
-        - zip
-        - unzip
-      become: true
-
     - name: Copy sudoers files for cloud-init to different location
       copy:
         src: '{{item}}'
@@ -112,12 +102,6 @@
         dest: /usr/bin/python
         state: link
         force: true
-
-    - name: Get AWS-CLI
-      shell: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
 
     - name: GET CloudWatch logs config from DQ-config-bucket - cp
       command: /usr/local/bin/aws s3 cp s3://dq-config-bucket/dq-tableau-linux/awslogs-agent-setup.py /tmp
