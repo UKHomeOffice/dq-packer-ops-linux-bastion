@@ -229,13 +229,13 @@
         block: |
           RES_OPTIONS="rotate timeout:1 attempts:1"
 
-    # use 'executable: pip3.11' because by default Ansible Pip will use (pip3.6)
+    # use 'executable: pip3.9' because by default Ansible Pip will use (pip3.6)
     - name: PIP install selinux bindings and boto3
       pip:
         name:
           - selinux
           - boto3
-        executable: pip3.11
+        executable: pip3.9
 
     - name: Secure sshd_config
       lineinfile:
