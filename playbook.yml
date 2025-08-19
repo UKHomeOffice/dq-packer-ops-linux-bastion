@@ -11,16 +11,6 @@
     - name: Set timezone to Europe/London
       timezone:
         name: Europe/London
-    # - name: DNF Install Dependencies
-    #   dnf: name={{ item }}
-    #   with_items:
-    #     - python3.11
-    #     - python3.11-pip
-    #     #        - libselinux-python3
-    #     - postgresql
-    #     - zip
-    #     - unzip
-      become: true
     - name: Get AWS-CLI
       shell: |
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -96,13 +86,6 @@
         - 90-cloud-init-users
       become: true
       become_user: root   
-
-    # - name: Create python link
-    #   file:
-    #     src: /usr/bin/python3.9
-    #     dest: /usr/bin/python
-    #     state: link
-    #     force: true
 
     - name: GET CloudWatch logs config from DQ-config-bucket - cp
       command: /usr/local/bin/aws s3 cp s3://dq-config-bucket/dq-tableau-linux/awslogs-agent-setup.py /tmp
