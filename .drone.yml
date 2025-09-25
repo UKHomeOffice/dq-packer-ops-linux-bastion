@@ -250,42 +250,7 @@ steps:
       - push
   depends_on:
     - retrieve_aws_secrets_prod
-
-
-# - name: packer-copy-notprod
-#   pull: always
-#   image: *copy-image
-#   commands:
-#   - source ./set_aws_secrets_np.sh
-#   - export filters="--owner 093401982388 --filters "Name=name,Values=dq-linux-bastion*""
-#   - export HOME=/home/packer
-#   - packer --version
-#   - cd /home/packer
-#   - ./build.sh
-#   when:
-#     event:
-#     - push
-#   depends_on:
-#     - retrieve_aws_secrets_np
-
-# - name: packer-copy-prod
-#   pull: if-not-exists
-#   image: *copy-image
-#   commands:
-#   - source ./set_aws_secrets_prod.sh
-#   - export filters="--owner 093401982388 --filters "Name=name,Values=dq-linux-bastion*""
-#   - export HOME=/home/packer
-#   - packer --version
-#   - cd /home/packer
-#   - ./build.sh
-#   when:
-#     branch:
-#     - master
-#     event:
-#     - push
-#   depends_on:
-#     - retrieve_aws_secrets_prod
-
+    
 - name: renew-vault-tokens
   pull: if-not-exists
   image: *vault-image
